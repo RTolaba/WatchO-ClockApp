@@ -3,6 +3,7 @@ import React from 'react'
 import colorPalette from "../../Resources/Colors";
 import Alarm from "../../alarms/components/Alarm";
 import ButtomAddAlarm from "../../alarms/components/ButtonAddAlarm";
+import AlarmList from "../../alarms/components/AlarmsList";
 
 
 
@@ -12,7 +13,7 @@ const Home = () => {
     return (<View style={container}>
                 <Text style={title}>Alarmas</Text>
                 <View style={line} />
-                <Alarm></Alarm>
+                <AlarmList  data={[]}/>
                 <View style={{flex: 1, justifyContent: 'flex-end', alignSelf: 'flex-end'}}>
                     <ButtomAddAlarm />
 
