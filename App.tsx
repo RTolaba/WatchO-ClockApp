@@ -70,9 +70,9 @@ function App(): React.JSX.Element {
         barStyle={!isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
-      <ScrollView style={{ backgroundColor: '#0b1d21' }}>
+      <View style={{ backgroundColor: '#0b1d21', flex: 1 }}>
         <Home></Home>
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }

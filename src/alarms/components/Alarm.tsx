@@ -2,14 +2,58 @@ import { Animated, Button, StyleSheet, Switch, Text, View } from "react-native";
 import React, { useRef, useState } from 'react'
 import colorPalette from "../../Resources/Colors";
 import Days from "./Day";
+import IAlarm from "../interfaces/IAlarm";
+import IDays from "../interfaces/IDays";
 
 interface AlarmProps {
-    hasNote?: string;
+    alarm: IAlarm;
 }
 
+const DaysOfTheWeek: IDays[] = [
+    {
+        char: 'L',
+        isEnable: true,
+        name: 'Lunes',
+    },
+    {
+        char: 'M',
+        isEnable: true,
+        name: 'Martes',
+    },
+    {
+        char: 'X',
+        isEnable: true,
+        name: 'Miercoles',
+    },
+    {
+        char: 'J',
+        isEnable: true,
+        name: 'Jueves',
+    },
+    {
+        char: 'V',
+        isEnable: true,
+        name: 'Viernes',
+    },
+    {
+        char: 'S',
+        isEnable: true,
+        name: 'Sabado',
+    },
+    {
+        char: 'D',
+        isEnable: true,
+        name: 'Domingo',
+    },
+]
+
 const Alarm = (props: AlarmProps) => {
+    const { container, alarmSides, leftSide, rightSide, leftTime, textNote, containerNote } = style;
+    const { hasNote, daystoReapeat, isEnable, repeat, ringtone, time, repeatEveryDay } = props.alarm;
+
+
     // fadeAnim will be used as the value for opacity. Initial Value: 0
-    const fadeAnim = useRef(new Animated.Value(0.8)).current;
+    const fadeAnim = useRef(new Animated.Value(isEnable ? 0.8 : 0.3)).current;
     
     const fadeIn = () => {
         // Will change fadeAnim value to 1 in 5 seconds
@@ -29,37 +73,26 @@ const Alarm = (props: AlarmProps) => {
         }).start();
     }
         
-    const [isEnabled, setIsEnabled] = useState(false);
+    const [isEnabled, setIsEnabled] = useState(isEnable);
     const toggleSwitch = () => setIsEnabled(previousState => {previousState ? fadeOut() : fadeIn() ; return !previousState;});
-    
-    const managerFadeBG = () => {
-        toggleSwitch();
-        fadeIn;
-    }
         
-    const { container, alarmSides, leftSide, rightSide, leftTime, textNote, containerNote } = style;
-    const { hasNote = true } = props;
-    const ContainerbackgroundColor = isEnabled ? colorPalette.primary : '#078a8570';
 
 
-    return (<Animated.View style={[container, { opacity: fadeAnim }]}>
+    return (<Animated.View style={[container, { opacity: fadeAnim }]}> 
         <View style={alarmSides}>
             <View style={leftSide}>
-                {hasNote ? (<View style={containerNote}><Text style={ textNote } numberOfLines={1} > Avisar de Mercaderia en la cinta metrica ahre falopa</Text></View>) : null}
+                {!!hasNote ? (<View style={containerNote}><Text style={ textNote } numberOfLines={1}>{ hasNote }</Text></View>) : null}
                 <View style={{flexDirection: 'row'}}>
-                    <Days textDay={'L'}/>
-                    <Days textDay={'M'}/>
-                    <Days textDay={'X'}/>
-                    <Days textDay={'J'}/>
-                    <Days textDay={'V'}/>
-                    <Days textDay={'S'}/>
-                    <Days textDay={'D'}/>
+                    {DaysOfTheWeek.map( (day, index) => {
+                        day.isEnable = repeatEveryDay ? repeatEveryDay : daystoReapeat.includes(day.char);
+                        return (<Days day={day} key={index}/>)
+                    })}
                 </View>
-                {hasNote ? (<View style={containerNote}><Text style={ textNote } numberOfLines={1} > # Canserbero - Jeremias 9:11</Text></View>) : null}
+                <View style={containerNote}><Text style={ textNote } numberOfLines={1} >{ringtone}</Text></View>
 
             </View>
             <View style={rightSide}>
-                <Text style={leftTime}>05:22</Text>
+                <Text style={leftTime}>{time}</Text>
                 <Switch
                 value={isEnabled} 
                 onValueChange={toggleSwitch} 
@@ -69,7 +102,7 @@ const Alarm = (props: AlarmProps) => {
             </View>
         </View> 
             </Animated.View>
-)
+    )
 }
 
 const style = StyleSheet.create({

@@ -1,46 +1,26 @@
 import { Animated, Button, StyleSheet, Switch, Text, TouchableOpacity, View } from "react-native";
 import React, { useRef, useState } from 'react'
 import colorPalette from "../../Resources/Colors";
+import IDays from "../interfaces/IDays";
 
 interface DaysProps {
-    textDay: string;
-    isActive?: string;
+    day: IDays;
 }
 
 const Days = (props: DaysProps) => {
-    // fadeAnim will be used as the value for opacity. Initial Value: 0
-    const fadeAnim = useRef(new Animated.Value(1)).current;
-    
-    const fadeIn = () => {
-        // Will change fadeAnim value to 1 in 5 seconds
-        Animated.timing(fadeAnim, {
-            toValue: 1,
-            duration: 1000,
-            useNativeDriver: true,
-        }).start();
-    };
-    
-    const fadeOut = () => {
-        // Will change fadeAnim value to 0 in 3 seconds
-        Animated.timing(fadeAnim, {
-            toValue: 0.5,
-            duration: 1000,
-            useNativeDriver: true,
-        }).start();
-    }
-        
-    const [isEnabled, setIsEnabled] = useState(false);
-    const toggleActive = () => setIsEnabled(previousState => {previousState ? fadeOut() : fadeIn() ; return !previousState;});
-    
     const { container, alarmSides, textDays } = style;
+    const { char, isEnable: isEnableProp, name } = props.day;
+
+    const [isEnabled, setIsEnabled] = useState(isEnableProp);
+    const toggleActive = () => setIsEnabled(previousState => {return !previousState;});
+    
     const ContainerbackgroundColor = isEnabled ? {backgroundColor: colorPalette.primary, } : {backgroundColor: colorPalette.background, opacity: 0.7};
-    const { textDay } = props;
 
     return (
         <TouchableOpacity onPress={toggleActive}>
             <Animated.View style={[container, ContainerbackgroundColor ]}>
                 <View style={alarmSides}>
-                    <Text style={textDays} >{textDay}</Text>
+                    <Text style={textDays} >{char}</Text>
                 </View> 
             </Animated.View>
         </TouchableOpacity>
